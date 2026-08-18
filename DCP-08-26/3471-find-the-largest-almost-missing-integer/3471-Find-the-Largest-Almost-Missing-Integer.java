@@ -1,47 +1,35 @@
 class Solution {
-
     public int largestInteger(int[] nums, int k) {
 
-        HashMap<Integer, Integer> main = new HashMap<>();
-        HashMap<Integer, Integer> map = new HashMap<>();
+        int[] freq = new int[51];
+        int[] count = new int[51];
 
         int l = 0;
-        int max = -1;
-        int n = nums.length;
 
-        for (int i = 0; i < n; i++) {
+        for (int r = 0; r < nums.length; r++) {
 
-            // Add element to current window
-            map.put(nums[i], map.getOrDefault(nums[i], 0) + 1);
+            freq[nums[r]]++;
 
-            // Window size == k
-            if (i - l + 1 == k) {
+            if (r - l + 1 == k) {
 
-                // Every distinct element appears in this window
-                for (int ele : map.keySet()) {
-                    main.put(ele, main.getOrDefault(ele, 0) + 1);
+                for (int x = 0; x <= 50; x++) {
+                    if (freq[x] > 0) {
+                        count[x]++;
+                    }
                 }
 
-                // Remove left element
-                int x = nums[l];
-
-                map.put(x, map.get(x) - 1);
-
-                if (map.get(x) == 0) {
-                    map.remove(x);
-                }
+                freq[nums[l]]--;
 
                 l++;
             }
         }
 
-        // Find largest element present in exactly one window
-        for (int ele : main.keySet()) {
-            if (main.get(ele) == 1) {
-                max = Math.max(max, ele);
+        for (int x = 50; x >= 0; x--) {
+            if (count[x] == 1) {
+                return x;
             }
         }
 
-        return max;
+        return -1;
     }
 }
